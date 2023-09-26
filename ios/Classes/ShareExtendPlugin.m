@@ -41,6 +41,14 @@
                     [imageArray addObject:image];
                 }
                 [self share:imageArray atSource:originRect withSubject:subject];
+            }else if ([shareType isEqualToString:@"textAndUrl"]) {
+                NSMutableArray * textAndUrlArray = [[NSMutableArray alloc] init];
+                for (NSString * path in array) {
+                    NSURL *url = [NSURL URLWithString:path];
+                    [textAndUrlArray addObject:url];
+                }
+                [textAndUrlArray insertObject:subject atIndex:0];
+                [self share:textAndUrlArray atSource:originRect withSubject:subject];
             } else {
                 NSMutableArray * urlArray = [[NSMutableArray alloc] init];
                 for (NSString * path in array) {
