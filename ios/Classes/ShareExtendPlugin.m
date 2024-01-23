@@ -49,6 +49,20 @@
                 }
                 [textAndUrlArray insertObject:subject atIndex:0];
                 [self share:textAndUrlArray atSource:originRect withSubject:subject];
+            } else if ([shareType isEqualToString:@"imageAndUrl"]) {
+                NSMutableArray * imageAndUrlArray = [[NSMutableArray alloc] init];
+                NSString *texts = array.firstObject;
+                NSArray *textArray = [texts componentsSeparatedByString:@";"];
+                for (int i = 0; i < textArray.count; i++) {
+                    if (i != 2) {
+                        [imageAndUrlArray addObject:textArray[i]];
+                    }else {
+                                        NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@",textArray[i]]];
+                                        NSData  *data1 = UIImagePNGRepresentation([self imageWithImageSimple:[[UIImage alloc]initWithData:[[NSData alloc] initWithContentsOfURL:url]] scaledToSize:CGSizeMake(150, 150)]);
+                                        [imageAndUrlArray addObject:data1];
+                    }
+                }
+                [self share:imageAndUrlArray atSource:originRect withSubject:subject];
             } else {
                 NSMutableArray * urlArray = [[NSMutableArray alloc] init];
                 for (NSString * path in array) {
