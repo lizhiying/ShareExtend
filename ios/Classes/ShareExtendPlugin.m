@@ -52,16 +52,10 @@
             } else if ([shareType isEqualToString:@"imageAndUrl"]) {
                 NSMutableArray * imageAndUrlArray = [[NSMutableArray alloc] init];
                 NSString *texts = array.firstObject;
-                NSArray *textArray = [texts componentsSeparatedByString:@";"];
-                for (int i = 0; i < textArray.count; i++) {
-                    if (i != 2) {
-                        [imageAndUrlArray addObject:textArray[i]];
-                    }else {
-                                        NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@",textArray[i]]];
-                                        NSData  *data1 = UIImagePNGRepresentation([self imageWithImageSimple:[[UIImage alloc]initWithData:[[NSData alloc] initWithContentsOfURL:url]] scaledToSize:CGSizeMake(150, 150)]);
-                                        [imageAndUrlArray addObject:data1];
-                    }
-                }
+                NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@",texts]];
+                NSData  *data1 = UIImagePNGRepresentation([self imageWithImageSimple:[[UIImage alloc]initWithData:[[NSData alloc] initWithContentsOfURL:url]] scaledToSize:CGSizeMake(150, 150)]);
+                [imageAndUrlArray addObject:data1];
+                [imageAndUrlArray insertObject:subject atIndex:0];
                 [self share:imageAndUrlArray atSource:originRect withSubject:subject];
             } else {
                 NSMutableArray * urlArray = [[NSMutableArray alloc] init];
