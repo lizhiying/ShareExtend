@@ -1,33 +1,37 @@
+plugins {
+    id 'com.android.library'
+}
+
 group 'com.zt.shareextend'
 version '1.0-SNAPSHOT'
 
-buildscript {
-    repositories {
-        google()
-        jcenter()
-    }
-
-    dependencies {
-        classpath 'com.android.tools.build:gradle:7.3.0'
-    }
-}
+// 删除整个 buildscript 块，因为它已经被迁移到 settings.gradle
 
 rootProject.allprojects {
     repositories {
         google()
-        jcenter()
+        // jcenter() 已废弃，建议用 mavenCentral()
+        mavenCentral()
     }
 }
 
-apply plugin: 'com.android.library'
-
 android {
-    compileSdkVersion 33
+    // 将 compileSdkVersion 升级到最新稳定版
+    compileSdk 35  // 36 是预览版，建议用 35 稳定版
+
+    namespace 'com.zt.shareextend'
 
     defaultConfig {
-        minSdkVersion 19
+        minSdk 19
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
+
+    // 添加编译配置
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
+    }
+
     lintOptions {
         disable 'InvalidPackage'
     }

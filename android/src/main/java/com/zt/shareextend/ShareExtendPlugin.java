@@ -11,7 +11,6 @@ import io.flutter.embedding.engine.plugins.activity.ActivityPluginBinding;
 import io.flutter.plugin.common.BinaryMessenger;
 import io.flutter.plugin.common.MethodChannel;
 import io.flutter.plugin.common.PluginRegistry;
-import io.flutter.plugin.common.PluginRegistry.Registrar;
 
 /**
  * Plugin method host for presenting a share sheet via Intent
@@ -29,11 +28,6 @@ public class ShareExtendPlugin implements FlutterPlugin, ActivityAware, PluginRe
     private MethodCallHandlerImpl callHandler;
     private Share share;
 
-    public static void registerWith(Registrar registrar) {
-        ShareExtendPlugin plugin = new ShareExtendPlugin();
-        plugin.setUpChannel(registrar.context(), registrar.messenger(), registrar, null);
-    }
-
     @Override
     public void onAttachedToEngine(@NonNull FlutterPluginBinding flutterPluginBinding) {
         pluginBinding = flutterPluginBinding;
@@ -47,7 +41,7 @@ public class ShareExtendPlugin implements FlutterPlugin, ActivityAware, PluginRe
     @Override
     public void onAttachedToActivity(@NonNull ActivityPluginBinding activityPluginBinding) {
         activityBinding = activityPluginBinding;
-        setUpChannel(activityBinding.getActivity(), pluginBinding.getBinaryMessenger(), null, activityBinding);
+        setUpChannel(activityBinding.getActivity(), pluginBinding.getBinaryMessenger(), activityBinding);
     }
 
     @Override
@@ -65,14 +59,12 @@ public class ShareExtendPlugin implements FlutterPlugin, ActivityAware, PluginRe
         tearDown();
     }
 
-    private void setUpChannel(Context context, BinaryMessenger messenger,Registrar registrar, ActivityPluginBinding activityBinding) {
+    private void setUpChannel(Context context, BinaryMessenger messenger, ActivityPluginBinding activityBinding) {
         methodChannel = new MethodChannel(messenger, CHANNEL);
         share = new Share(context);
         callHandler = new MethodCallHandlerImpl(share);
         methodChannel.setMethodCallHandler(callHandler);
-        if (registrar != null) {
-            registrar.addRequestPermissionsResultListener(this);
-        } else {
+        if (activityBinding != null) {
             activityBinding.addRequestPermissionsResultListener(this);
         }
     }

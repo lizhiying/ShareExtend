@@ -1,23 +1,13 @@
-buildscript {
-    repositories {
-        google()
-        jcenter()
-    }
-
-    dependencies {
-        classpath 'com.android.tools.build:gradle:3.3.1'
-    }
-}
-
 allprojects {
     repositories {
         google()
-        jcenter()
+        // 注意：建议将 jcenter() 替换为 mavenCentral()
+        // jcenter() 已处于只读状态，未来可能被移除
+        mavenCentral()
     }
 }
 
 rootProject.buildDir = '../build'
-
 subprojects {
     project.buildDir = "${rootProject.buildDir}/${project.name}"
 }
@@ -25,6 +15,6 @@ subprojects {
     project.evaluationDependsOn(':app')
 }
 
-task clean(type: Delete) {
-    delete rootProject.buildDir
+tasks.register("clean", Delete) {
+    delete rootProject.layout.buildDirectory
 }

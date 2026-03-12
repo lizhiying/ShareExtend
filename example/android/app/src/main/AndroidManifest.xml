@@ -17,7 +17,6 @@
          additional functionality it is fine to subclass or reimplement
          FlutterApplication and put your custom class here. -->
     <application
-        android:name="io.flutter.app.FlutterApplication"
         android:label="share_extend_example"
         android:icon="@mipmap/ic_launcher">
 
@@ -25,6 +24,7 @@
             android:name="io.flutter.embedding.android.FlutterActivity"
             android:launchMode="singleTop"
             android:theme="@style/LaunchTheme"
+            android:exported="true"
             android:configChanges="orientation|keyboardHidden|keyboard|screenSize|locale|layoutDirection|fontScale|screenLayout|density"
             android:hardwareAccelerated="true"
             android:windowSoftInputMode="adjustResize">
@@ -37,20 +37,6 @@
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
-        </activity>
-
-        <!-- used for v1 api -->
-        <activity
-            android:name=".EmbeddingV1Activity"
-            android:theme="@android:style/Theme.Black.NoTitleBar"
-            android:configChanges="orientation|keyboardHidden|keyboard|screenSize|locale|layoutDirection"
-            android:hardwareAccelerated="true"
-            android:windowSoftInputMode="adjustResize">
-
-            <meta-data
-                android:name="io.flutter.app.android.SplashScreenUntilFirstFrame"
-                android:value="true" />
-
         </activity>
 
         <meta-data android:name="flutterEmbedding" android:value="2"/>

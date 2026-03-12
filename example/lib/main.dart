@@ -3,7 +3,6 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:multi_image_picker/multi_image_picker.dart';
 
 import 'package:share_extend/share_extend.dart';
 import 'package:image_picker/image_picker.dart';
@@ -38,8 +37,8 @@ class _MyAppState extends State<MyApp> {
                 ElevatedButton(
                   style: ButtonStyle(
                       backgroundColor:
-                          MaterialStateProperty.all(Colors.white70),
-                      foregroundColor: MaterialStateProperty.all(Colors.black)),
+                          WidgetStateProperty.all(Colors.white70),
+                      foregroundColor: WidgetStateProperty.all(Colors.black)),
                   onPressed: () {
                     ShareExtend.share("share text", "text",
                         sharePanelTitle: "share text title",
@@ -50,29 +49,13 @@ class _MyAppState extends State<MyApp> {
                 ElevatedButton(
                   style: ButtonStyle(
                       backgroundColor:
-                          MaterialStateProperty.all(Colors.white70),
-                      foregroundColor: MaterialStateProperty.all(Colors.black)),
+                          WidgetStateProperty.all(Colors.white70),
+                      foregroundColor: WidgetStateProperty.all(Colors.black)),
                   onPressed: () async {
                     final res =
-                        await _picker.getImage(source: ImageSource.gallery);
-                    if (res.path != null) {
-                      ShareExtend.share(res.path, "image",
-                          sharePanelTitle: "share image title",
-                          subject: "share image subject");
-                    }
-                  },
-                  child: Text("share image"),
-                ),
-                ElevatedButton(
-                  style: ButtonStyle(
-                      backgroundColor:
-                          MaterialStateProperty.all(Colors.white70),
-                      foregroundColor: MaterialStateProperty.all(Colors.black)),
-                  onPressed: () async {
-                    final res =
-                        await _picker.getVideo(source: ImageSource.gallery);
-                    if (res.path != null) {
-                      ShareExtend.share(res.path, "video");
+                        await _picker.pickVideo(source: ImageSource.gallery);
+                    if (res?.path != null) {
+                      ShareExtend.share(res?.path??"", "video");
                     }
                   },
                   child: Text("share video"),
@@ -80,22 +63,12 @@ class _MyAppState extends State<MyApp> {
                 ElevatedButton(
                   style: ButtonStyle(
                       backgroundColor:
-                          MaterialStateProperty.all(Colors.white70),
-                      foregroundColor: MaterialStateProperty.all(Colors.black)),
+                          WidgetStateProperty.all(Colors.white70),
+                      foregroundColor: WidgetStateProperty.all(Colors.black)),
                   onPressed: () {
                     _shareStorageFile();
                   },
                   child: Text("share file"),
-                ),
-                ElevatedButton(
-                  style: ButtonStyle(
-                      backgroundColor:
-                          MaterialStateProperty.all(Colors.white70),
-                      foregroundColor: MaterialStateProperty.all(Colors.black)),
-                  onPressed: () {
-                    _shareMultipleImages();
-                  },
-                  child: Text("share multiple images"),
                 ),
               ],
             ),
@@ -105,34 +78,29 @@ class _MyAppState extends State<MyApp> {
     );
   }
 
-  ///share multiple images
-  _shareMultipleImages() async {
-    List<Asset> assetList = await MultiImagePicker.pickImages(maxImages: 5);
-    var imageList = <String>[];
-    for (var asset in assetList) {
-      String path =
-          await _writeByteToImageFile(await asset.getByteData(quality: 30));
-      imageList.add(path);
-    }
-    ShareExtend.shareMultiple(imageList, "image", subject: "share multi image");
-  }
-
   Future<String> _writeByteToImageFile(ByteData byteData) async {
-    Directory dir = Platform.isAndroid
+    Directory? dir = Platform.isAndroid
         ? await getExternalStorageDirectory()
         : await getApplicationDocumentsDirectory();
-    File imageFile = new File(
-        "${dir.path}/flutter/${DateTime.now().millisecondsSinceEpoch}.png");
-    imageFile.createSync(recursive: true);
-    imageFile.writeAsBytesSync(byteData.buffer.asUint8List(0));
-    return imageFile.path;
+    if(dir !=null){
+      File imageFile = new File(
+          "${dir.path}/flutter/${DateTime.now().millisecondsSinceEpoch}.png");
+      imageFile.createSync(recursive: true);
+      imageFile.writeAsBytesSync(byteData.buffer.asUint8List(0));
+      return imageFile.path;
+    }else{
+      return "";
+    }
   }
 
   ///share the storage file
   _shareStorageFile() async {
-    Directory dir = Platform.isAndroid
+    Directory? dir = Platform.isAndroid
         ? await getExternalStorageDirectory()
         : await getApplicationDocumentsDirectory();
+    if(dir==null){
+      return "";
+    }
     File testFile = File("${dir.path}/flutter/test.txt");
     if (!await testFile.exists()) {
       await testFile.create(recursive: true);
