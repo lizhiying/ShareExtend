@@ -95,7 +95,7 @@
 + (void)share:(NSArray *)sharedItems atSource:(CGRect)origin withSubject:(NSString *) subject {
     UIActivityViewController *activityViewController = [[UIActivityViewController alloc] initWithActivityItems:sharedItems applicationActivities:nil];
     
-    UIViewController *controller =[UIApplication sharedApplication].keyWindow.rootViewController;
+    UIViewController *controller =[UIApplication sharedApplication].delegate.window.rootViewController;
     activityViewController.popoverPresentationController.sourceView = controller.view;
 
     if (CGRectIsEmpty(origin)) {
